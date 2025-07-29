@@ -1,7 +1,7 @@
 <section class="p-10">
   <h1 class="text-center font-bold underline">My favorite series !</h1>
 
-  @for (serie of series; track serie; let i = $index) {
+  @for (serie of series | sortarrayPipe:order; track serie; let i = $index) {
     <div
       role="button"
       class="text-slate-800 flex w-full items-center rounded-md p-2 pl-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
@@ -19,4 +19,12 @@
     <p>The list is empty ! </p>
   }
 
+  <div class="inline-flex">
+    <button (click)="changeOrder('asc')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+      Order ASC
+    </button>
+    <button (click)="changeOrder('desc')" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+      Order DESC
+    </button>
+  </div>
 </section>

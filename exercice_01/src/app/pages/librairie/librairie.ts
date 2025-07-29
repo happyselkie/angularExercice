@@ -1,17 +1,26 @@
 import { Component } from '@angular/core';
 import {Book} from './book';
 import {IsreadEmojiPipe} from '../../utils/isread-emoji-pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-librairie',
   imports: [
-    IsreadEmojiPipe
+    IsreadEmojiPipe,
+    FormsModule
   ],
   templateUrl: './librairie.html',
   styleUrl: './librairie.css'
 })
 
 export class Librairie {
+  isSubmitted : boolean = false
+  newBook : Book = {
+    title : "",
+    author : "",
+    isRead : false
+  }
+
   book1 : Book = {
     title : "La Horde du Contrevent",
     author : "Alain Damasio",
@@ -50,6 +59,18 @@ export class Librairie {
     return book;
   }
 
+
+  submitBook() : void {
+    this.isSubmitted = true
+    if (!this.titleHasError){
+      console.log(this.newBook);
+      this.bookList.push(this.newBook)
+    }
+  }
+
+  get titleHasError() {
+    return this.newBook.title.length < 1 && this.isSubmitted
+  }
 
 
 }

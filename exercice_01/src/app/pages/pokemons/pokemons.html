@@ -1,0 +1,145 @@
+<section class="p-10">
+
+  <h1 class="text-center font-bold underline mb-8">My Pokedex</h1>
+
+
+  @if (pokedex.length != 0) {
+
+  } @else {
+    <p class="text-center font-bold underline mb-8">The pokedex is empty, add a new pokemon ! </p>
+  }
+
+
+  <div class="relative flex flex-col w-full h-full overflow-scroll text-slate-300 bg-slate-800 shadow-md rounded-lg bg-clip-border">
+    <table class="w-full text-left table-auto min-w-max">
+      <thead>
+      <tr>
+        <th class="p-4 border-b border-slate-600 bg-slate-700">
+          <p class="text-sm font-normal leading-none text-slate-300">
+            Name
+          </p>
+        </th>
+        <th class="p-4 border-b border-slate-600 bg-slate-700">
+          <p class="text-sm font-normal leading-none text-slate-300">
+            description
+          </p>
+        </th>
+        <th class="p-4 border-b border-slate-600 bg-slate-700">
+          <p class="text-sm font-normal leading-none text-slate-300">
+            types
+          </p>
+        </th>
+        <th class="p-4 border-b border-slate-600 bg-slate-700">
+          <p class="text-sm font-normal leading-none text-slate-300">
+            attacks
+          </p>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+
+        @for (pokemon of pokedex ; track pokemon; let i = $index) {
+          <tr class="hover:bg-slate-700">
+            <td class="p-4 border-b border-slate-700">
+              <p class="text-sm text-slate-100 font-semibold">
+                {{ pokemon.name }}
+              </p>
+            </td>
+            <td class="p-4 border-b border-slate-700">
+              <p class="text-sm text-slate-300">
+                {{ pokemon.description }}
+              </p>
+            </td>
+            <td class="p-4 border-b border-slate-700">
+              @for(type of pokemon.types; track type; let j = $index){
+                <p class="text-sm text-slate-300">
+                  {{ type }}
+                </p>
+              }
+            </td>
+
+            <td class="p-4 border-b border-slate-700">
+              @for(attack of pokemon.attacks; track attack; let j = $index){
+                <p class="text-sm text-slate-300">
+                  {{ attack.name }} - {{ attack.description }} - {{ attack.damages }} - {{ attack.type }}
+                </p>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+<section class="p-10">
+  <div class="relative flex flex-col rounded-xl bg-transparent m-auto max-w-md shadow-md p-2 justify-items-center items-center">
+    <h2 class="block text-xl font-medium text-slate-800">
+      Add a new Pokemon !
+    </h2>
+    <form class="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" [formGroup]="pokedex_form" (ngSubmit)="save_pkmn()">
+      <div class="mb-1 flex flex-col gap-6">
+        <div class="w-full max-w-sm min-w-[200px]">
+          <label class="block mb-2 text-sm text-slate-600">
+            Name
+          </label>
+          <input type="text" formControlName="name" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Name"/>
+        </div>
+        <div class="w-full max-w-sm min-w-[200px]">
+          <label class="block mb-2 text-sm text-slate-600">
+            Description
+          </label>
+          <input type="text" formControlName="description" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Your Email" />
+        </div>
+        <fieldset formGroupName="types" class="mb-1">
+          <legend class="block text-center underline mb2 text-slate-800">Types :</legend>
+          <div class="flex flex-row gap-5">
+            @for (type of types.controls; track type; let i = $index){
+              <div class="block w-1/2 mb-2 text-sm text-slate-600">
+                <label [for]="'types' + $index" class="block mb-2 text-sm text-slate-600">Type {{ $index + 1 }}</label>
+                <input type="text" [name]="'types' + $index" [formControlName]="$index" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+              </div>
+            }
+          </div>
+        </fieldset>
+
+        <fieldset formGroupName="attacks" class="mb-1 p-2">
+          <legend class="block text-center underline mb2 text-slate-800">Attacks :</legend>
+          <div class="flex-col gap-5">
+            @for (attack of attacks.controls; track attack; let i = $index){
+              <fieldset [formGroupName]="$index"  class="p-2 border-b-2">
+                <div>
+                  <label [for]="'name' + $index" class="block mb-2 text-sm text-slate-600">Name</label>
+                  <input type="text" [name]="'name' + $index" [id]="'name' + $index" formControlName="name" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+                </div>
+                <div>
+                  <label [for]="'description' + $index" class="block mb-2 text-sm text-slate-600">Description</label>
+                  <input type="text" [name]="'description' + $index" [id]="'description' + $index" formControlName="description" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+                </div>
+                <div>
+                  <label [for]="'damages' + $index" class="block mb-2 text-sm text-slate-600">Damages</label>
+                  <input type="number" [name]="'damages' + $index" [id]="'damages' + $index" formControlName="damages" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+                </div>
+                <div>
+                  <label [for]="'type' + $index" class="block mb-2 text-sm text-slate-600">Type</label>
+                  <input type="text" [name]="'type' + $index" [id]="'type' + $index" formControlName="type" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+                </div>
+              </fieldset>
+
+
+             <!-- <div class="block w-1/2 mb-2 text-sm text-slate-600">
+                <label [for]="'attacks' + $index" class="block mb-2 text-sm text-slate-600">Type {{ $index + 1 }}</label>
+                <input type="text" [name]="'attacks' + $index" [formControlName]="$index" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+              </div>-->
+            }
+          </div>
+        </fieldset>
+      </div>
+
+      <button type="submit" class="mt-4 w-full rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" >
+       Save !
+      </button>
+    </form>
+  </div>
+</section>

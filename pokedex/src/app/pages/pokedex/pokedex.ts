@@ -1,8 +1,8 @@
 import {AfterContentInit, Component, OnInit} from '@angular/core';
 import {ApiService} from '../../utils/service/api-service';
 import {Pokemon} from '../../utils/types/pokemon.type';
-import {UcfirstPipe} from '../../utils/ucfirst-pipe';
-import {GetTypePipe} from '../../utils/get-type-pipe';
+import {UcfirstPipe} from '../../utils/pipes/ucfirst-pipe';
+import {GetTypePipe} from '../../utils/pipes/get-type-pipe';
 
 interface PokeListResult {
   name : string,
@@ -26,8 +26,11 @@ interface PokeList {
 
 export class Pokedex implements OnInit{
   pokedex : Pokemon[] = [];
+  list : Pokemon[] = [];
+  team : number[] = [];
   pokeList : PokeList = { results : [] };
   listError : string = "";
+  search : string = "";
   pokemon : Pokemon = {
     id: 0,
     name: "",
@@ -41,6 +44,7 @@ export class Pokedex implements OnInit{
       }
     }],
   };
+
 
   constructor(private apiService : ApiService) {}
 
@@ -65,11 +69,14 @@ export class Pokedex implements OnInit{
       },
       error: err => console.log(err)
     });
+    if (typeof  window !== 'undefined' && window.localStorage){
+      if(localStorage.getItem("team") !== null) this.team = JSON.parse(localStorage.getItem("team") || '{}');
+    }
+
+    this.list = this.pokedex;
   }
 
   displayPokemon(id : number){
-   // this.pokemon = pokemon;
-
     this.apiService.getPokemon('https://pokeapi.co/api/v2/pokemon/'+id).subscribe({
       next: data => {
         this.pokemon = data;
@@ -84,5 +91,22 @@ export class Pokedex implements OnInit{
     let modal = document.getElementById("modal");
     modal?.classList.add('hidden');
   }
+
+  toggleTeam(id: number){
+    if (this.team.includes(id)) this.team.splice(this.team.indexOf(id), 1)
+    else this.team.push(id);
+    localStorage.setItem("team", JSON.stringify(this.team))
+  }
+
+  sendTerms(event : Event){
+    let input = event.target as HTMLInputElement
+    console.log(input.value)
+    if (input.value.length > 2){
+      this.list.filter((pokemon) => pokemon.name.includes(input.value))
+    } else {
+      this.list = this.pokedex;
+    }
+  }
+
 
 }

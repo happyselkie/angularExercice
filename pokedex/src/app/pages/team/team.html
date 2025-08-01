@@ -1,0 +1,112 @@
+<main class="w-full min-h-screen p-10 flex flex-col justify-center items-center bg-slate-400">
+  <div class="max-w-800 m-auto">
+
+    <h1 class="font-bold font-xl text-center mb-10 underline">My Team ! </h1>
+
+    @if(team.length > 0){
+      <div class="relative flex flex-col w-full h-full overflow-hidden text-slate-300 bg-slate-800 shadow-md rounded-lg bg-clip-border">
+        <table class="w-full text-left table-auto min-w-max">
+          <thead>
+          <tr>
+            <th class="p-4 border-b border-slate-600 bg-slate-700">
+              <p class="text-sm font-normal leading-none text-slate-300">
+                Picture
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-600 bg-slate-700">
+              <p class="text-sm font-normal leading-none text-slate-300">
+                Name
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-600 bg-slate-700">
+              <p class="text-sm font-normal leading-none text-slate-300">
+                Types
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-600 bg-slate-700">
+              <p class="text-sm font-normal leading-none text-slate-300">
+                Remove
+              </p>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+
+            @for (pokemon of team ; track pokemon; let i = $index) {
+              <tr class="hover:bg-slate-700 border-b border-b-slate-400">
+                <td class="w-40 p-3 cursor-pointer" (click)="displayPokemon(pokemon.id)">
+                  <img class="m-auto" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/{{ pokemon.id }}.gif" alt="Jese image">
+                </td>
+                <td class="w-40 p-3 cursor-pointer" (click)="displayPokemon(pokemon.id)">
+                  {{ pokemon.name | ucfirst }}
+                </td>
+                <td class="w-50 p-3">
+                  <div class="flex gap-2">
+                    @for (type of pokemon.types; track type; let j = $index){
+                      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/{{ type.type.url | getType }}.png" alt="{{ type.type.name }}" class="w-1/2">
+                    }
+                  </div>
+                </td>
+                <td class="w-70 p-3">
+                  <button (click)="removePkmn(pokemon)" type="button"  class="block ml-auto bg-red-300 hover:bg-red-400 text-gray-800 font-semibold py-2 px-4 border border-red-400 rounded-md shadow">
+                    Remove from team
+                  </button>
+                </td>
+              </tr>
+
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p>The team is empty ! </p>
+    }
+  </div>
+
+
+  <div id="modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex-col justify-center items-center bg-gray-800 bg-opacity-80">
+    <div class="relative w-full max-w-2xl max-h-full m-auto ">
+      <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+          <h3 class="text-xl text-gray-900 dark:text-white font-bold">
+            {{ pokemon.name | ucfirst}}
+          </h3>
+          <button (click)="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="top-left-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <div class="p-4 md:p-5 space-y-4">
+          <img class="w-50 h-50 m-auto mb-5" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{ pokemon.id }}.png" alt="Jese image">
+          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Height : {{ pokemon.height }}
+          </p>
+          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Weight : {{ pokemon.weight }}
+          </p>
+        </div>
+
+        <div class="p-4 md:p-5 space-y-4">
+          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">Types : </p>
+          <div class="flex gap-2">
+            @for (type of pokemon.types; track type; let j = $index){
+              <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/{{ type.type.url | getType }}.png" alt="{{ type.type.name }}" class="w-1/8">
+            }
+          </div>
+        </div>
+
+        <div class="p-4 md:p-5 space-y-4">
+          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">Moves : </p>
+          <div class="flex flex-wrap gap-2">
+            @for (move of pokemon.moves.slice(0, 4); track move; let j = $index){
+              <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400 border-1 p-1 max-w-max">{{ move.move.name }}</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
